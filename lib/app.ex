@@ -12,8 +12,7 @@ defmodule Chat.Application do
     ]
 
     opts = [strategy: :one_for_one, name: Chat.Supervisor]
-    Supervisor.
-    (children, opts)
+    Supervisor.start_link(children, opts)
   end
 
   defp topologies do
