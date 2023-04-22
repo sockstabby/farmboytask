@@ -7,7 +7,7 @@ defmodule Chat.Application do
   def start(_type, _args) do
     children = [
       {Cluster.Supervisor, [topologies(), [name: BackgroundJob.ClusterSupervisor]]},
-      #HordeTaskRouter.HordeRegistry,
+      {Phoenix.PubSub, name: :tasks},
       {Task.Supervisor, name: Chat.TaskSupervisor}
     ]
 
