@@ -58,4 +58,4 @@ ENV RELEASE_NODE="${RELEASE_NAME}@${RELEASE_IP}"
 # OVERRIDE IT!!
 ENV RELEASE_COOKIE="asdf"
 
-ENTRYPOINT ["/opt/myapp/bin/worker"]
+ENTRYPOINT ["/opt/worker/bin/worker"]
