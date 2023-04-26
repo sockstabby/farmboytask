@@ -1,4 +1,4 @@
-FROM elixir:1.14-alpine AS builder
+FROM  elixir:1.14-alpine AS builder
 
 ARG BUILD_ENV=dev
 ARG BUILD_REL=worker
