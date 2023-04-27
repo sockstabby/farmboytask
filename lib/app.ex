@@ -17,8 +17,13 @@ defmodule Chat.Application do
 
   defp topologies do
     [
-      background_job: [
-        strategy: Cluster.Strategy.Gossip
+      k8s_example: [
+        strategy: Elixir.Cluster.Strategy.Kubernetes.DNS,
+        config: [
+          service: "cluster-svc",
+          application_name: "worker",
+          polling_interval: 3_000
+        ]
       ]
     ]
   end
