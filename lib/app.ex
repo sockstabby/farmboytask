@@ -48,7 +48,7 @@ defmodule Chat.Application do
         strategy: Elixir.Cluster.Strategy.Kubernetes.DNS,
         config: [
           service: "cluster-svc",
-          application_name: "router",
+          application_name: "task_router",
           polling_interval: 3_000
         ]
       ]
