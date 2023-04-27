@@ -5,8 +5,9 @@ defmodule Chat.Application do
 
   def start(_type, _args) do
     children = [
-      {Cluster.Supervisor, [topologies(), [name: BackgroundJob.ClusterSupervisor]]},
-      Supervisor.child_spec({Cluster.Supervisor, [topologies_phoenix(), [name: BackgroundJob.ClusterSupervisor2]]} , id: :phoenix_cluster_sup),
+      {Cluster.Supervisor, [topologies(), [name: BackgroundJob.ClusterSupervisorWorker]]},
+      Supervisor.child_spec({Cluster.Supervisor, [topologies_phoenix(), [name: BackgroundJob.ClusterSupervisorPhoenix]]} , id: :phoenix_cluster_sup),
+      Supervisor.child_spec({Cluster.Supervisor, [topologies_router(), [name: BackgroundJob.ClusterSupervisorRouter]]} , id: :router_cluster_sup),
       {Phoenix.PubSub, name: :tasks},
       {Task.Supervisor, name: Chat.TaskSupervisor}
     ]
@@ -35,6 +36,19 @@ defmodule Chat.Application do
         config: [
           service: "cluster-svc",
           application_name: "hello",
+          polling_interval: 3_000
+        ]
+      ]
+    ]
+  end
+
+  defp topologies_router do
+    [
+      k8s_example: [
+        strategy: Elixir.Cluster.Strategy.Kubernetes.DNS,
+        config: [
+          service: "cluster-svc",
+          application_name: "router",
           polling_interval: 3_000
         ]
       ]
