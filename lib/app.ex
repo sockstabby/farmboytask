@@ -5,15 +5,23 @@ defmodule Chat.Application do
 
   def start(_type, _args) do
     children = [
-      {Cluster.Supervisor, [topologies(), [name: BackgroundJob.ClusterSupervisorWorker]]},
-      Supervisor.child_spec({Cluster.Supervisor, [topologies_phoenix(), [name: BackgroundJob.ClusterSupervisorPhoenix]]} , id: :phoenix_cluster_sup),
-      Supervisor.child_spec({Cluster.Supervisor, [topologies_router(), [name: BackgroundJob.ClusterSupervisorRouter]]} , id: :router_cluster_sup),
+      {Cluster.Supervisor, [topologies_gossip(), [name: BackgroundJob.ClusterSupervisorWorker]]},
+      #Supervisor.child_spec({Cluster.Supervisor, [topologies_phoenix(), [name: BackgroundJob.ClusterSupervisorPhoenix]]} , id: :phoenix_cluster_sup),
+      #Supervisor.child_spec({Cluster.Supervisor, [topologies_router(), [name: BackgroundJob.ClusterSupervisorRouter]]} , id: :router_cluster_sup),
       {Phoenix.PubSub, name: :tasks},
       {Task.Supervisor, name: Chat.TaskSupervisor}
     ]
 
     opts = [strategy: :one_for_one, name: Chat.Supervisor]
     Supervisor.start_link(children, opts)
+  end
+
+  defp topologies_gossip do
+    [
+      background_job: [
+        strategy: Cluster.Strategy.Gossip
+      ]
+    ]
   end
 
   defp topologies do
