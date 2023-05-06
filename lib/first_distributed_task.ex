@@ -4,10 +4,11 @@ defmodule FirstDistributedTask do
   require Logger
 
 
-  def hello(roomid, origin_node, args) do
+  def hello(roomid, origin_node, _taskid, args) do
     send_message("starting task", roomid, origin_node)
 
-    IO.puts("YAWN #{IO.inspect(args)}")
+
+    Logger.debug(("Worker Called #{inspect(args)}"))
     Process.sleep(1000 * 1)
     send_message("Doing Stuff", roomid, origin_node)
     Process.sleep(1000 * 1)
@@ -19,7 +20,7 @@ defmodule FirstDistributedTask do
     Process.sleep(1000 * 30)
     send_message("Doing Stuff", roomid, origin_node)
 
-    IO.puts("awake now")
+    Logger.debug("awake now")
 
     send_message("ending task", roomid, origin_node)
   end
@@ -44,5 +45,17 @@ defmodule FirstDistributedTask do
       }
     }
 
+  end
+
+  def get_worker_resources() do
+    %{
+      worker_resource_info:
+        %{
+          host: node(),
+          avg1: :cpu_sup.avg1,
+          avg5: :cpu_sup.avg5,
+          avg15: :cpu_sup.avg15
+        }
+    }
   end
 end
