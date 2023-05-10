@@ -4,30 +4,25 @@ defmodule FirstDistributedTask do
   require Logger
 
 
-  def hello(roomid, origin_node, _taskid, args) do
-    send_message("starting task", roomid, origin_node)
+  def hello(roomid, origin_node, id, method, args) do
+    send_message(id, method, "starting task", roomid, origin_node)
 
 
     Logger.debug(("Worker Called #{inspect(args)}"))
-    Process.sleep(1000 * 1)
-    send_message("Doing Stuff", roomid, origin_node)
-    Process.sleep(1000 * 1)
-    send_message("Doing Stuff", roomid, origin_node)
-    Process.sleep(1000 * 1)
-    send_message("Doing Stuff", roomid, origin_node)
-    Process.sleep(1000 * 1)
-    send_message("Doing Stuff", roomid, origin_node)
-    Process.sleep(1000 * 30)
-    send_message("Doing Stuff", roomid, origin_node)
+    send_message(id, method, "Walk the dog", roomid, origin_node)
+    send_message(id, method, "Cut the grass", roomid, origin_node)
+    send_message(id, method, "Clean the gutters", roomid, origin_node)
+    send_message(id, method, "Making lunch", roomid, origin_node)
+    send_message(id, method, "Going to sleep", roomid, origin_node)
 
+    Process.sleep(String.to_integer(args) * 1000)
     Logger.debug("awake now")
-
-    send_message("ending task", roomid, origin_node)
+    send_message(id, method, "All done", roomid, origin_node)
   end
 
-  defp send_message(msg, roomid, origin_node) do
+  defp send_message(id, method, msg, roomid, origin_node) do
     me = Atom.to_string(node())
-    PubSub.broadcast(:tasks, "user:123", {:task_update, %{id: 123, msg: msg, node: me, roomid: roomid, origin_node: origin_node}})
+    PubSub.broadcast(:tasks, "user:123", {:task_update, %{id: id, method: method, msg: msg, node: me, roomid: roomid, origin_node: origin_node}})
   end
 
 
@@ -39,8 +34,20 @@ defmodule FirstDistributedTask do
         [
           %{
             taskid: 1,
-            task_desc: "This task simply calls the System command in elixir"
+            task_display_name: "Do Stuff and Sleep",
+            task_desc: "A description"
+          },
+          %{
+            taskid: 2,
+            task_display_name: "Pay Taxes",
+            task_desc: "Pay Taxes Description"
+          },
+          %{
+            taskid: 3,
+            task_display_name: "Go To Meeting",
+            task_desc: "Go To Meeting Description"
           }
+
         ]
       }
     }
