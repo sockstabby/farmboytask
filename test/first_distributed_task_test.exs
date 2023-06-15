@@ -1,8 +1,8 @@
-defmodule FirstDistributedTaskTest do
+defmodule DistributedTaskTest do
   use ExUnit.Case
-  doctest FirstDistributedTask
+  doctest DistributedTask
 
   test "greets the world" do
-    assert FirstDistributedTask.hello() == :world
+    assert DistributedTask.hello() == :world
   end
 end

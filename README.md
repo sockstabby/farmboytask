@@ -1,33 +1,37 @@
-# FirstDistributedTask
+# Introduction
 
-**TODO: Add description**
+Farmboy is a distributed and scalable task runner. This is originally intended to be used to collect thousands of datapoints
+from an external API.
 
-## Installation
+The project is split up into three repos.
 
-This is called from another node. we need to run the task supervsior here.
+Farmboy - is an Elixir OTP Genserver that is reponsible for discovering workers in a cluster. It uses the Quantum Elixir module to schedule tasks. It distibutes the work by choosing a node with the least load averate. It invokes Farmboy Task passing it
+the configuration whenever it is scheduled to run.
 
-to start worker in dev mode
-iex --name worker3@127.0.0.1 --cookie asdf -S mix
+Farmboy Task - is the task that you define. This repo provides a sample implementation. Tasks can publish status messages which in turn get written to a Phoenix channel so end users can see the logs in realtime.
 
-iex --name worker4@127.0.0.1 --cookie asdf -S mix
+Farmboy Web - A user interface, webserver and API to configure tasks and get task status.
 
-:memsup.get_system_memory_data
+Take a look at the in app screenshots in the Web app repo's appscreens folder.
 
-:cpu_sup.avg1
-:cpu_sup.avg5
-:cpu_sup.avg15
+# Building
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `first_distributed_task` to your list of dependencies in `mix.exs`:
+You have several options to build this code
 
-```elixir
-def deps do
-  [
-    {:first_distributed_task, "~> 0.1.0"}
-  ]
-end
+1. Run a debug build locally
+
+```
+iex --name worker@127.0.0.1 --cookie asdf -S  mix
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/first_distributed_task>.
+2. Build a docker image and run in docker or kubernetes
+
+   ```
+   docker build . -t workerimage
+   docker tag workerimage {docker-hub-username}/{default-repo-folder-name}:workerimage
+   docker push {docker-hub-username}/{default-repo-folder-name}:workerimage
+
+   ```
+
+   Now it will be availabe to create containers in your Kubernetes
+   cluster. See the worker_dep.yaml file in Kubs repo for reference.

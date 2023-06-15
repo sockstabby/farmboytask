@@ -1,4 +1,4 @@
-defmodule FirstDistributedTask.MixProject do
+defmodule DistributedTask.MixProject do
   use Mix.Project
 
   def project do
@@ -27,7 +27,6 @@ defmodule FirstDistributedTask.MixProject do
       {:libcluster, "~> 3.3"},
       {:horde, "~> 0.8.3"},
       {:phoenix_pubsub, "~> 2.1"}
-
     ]
   end
 end
