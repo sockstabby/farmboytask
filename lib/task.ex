@@ -29,12 +29,13 @@ defmodule DistributedTask do
 
     PubSub.broadcast(
       :tasks,
-      "user:123",
+      "tasklog",
       {:task_update,
        %{id: id, method: method, msg: msg, node: me, roomid: roomid, origin_node: origin_node}}
     )
   end
 
+  @spec get_worker_details :: %{worker_registration: %{host: atom, items: [map, ...]}}
   @doc """
   This method is called from the farmboy as soon as this is loaded in the cluster.
   We'll return task meta information so a user can configure a task to run us.
